@@ -1,35 +1,24 @@
 import streamlit as st
 import pandas as pd
 
-# Simula la base de datos. Reemplaza 'base.csv' con la ruta a tu archivo de base de datos real.
-# Asegúrate de que tu base de datos tenga una columna para la matrícula y otra para el nombre.
-# Por ejemplo, puedes usar un archivo CSV o conectar a una base de datos real.
 try:
     df = pd.read_csv('base.csv')
+    df['Matricula'] = df['Matricula'].astype(str).str.strip()  # Asegura que las matrículas estén limpias
 except FileNotFoundError:
-    st.error("No se encontró el archivo 'base.csv'. Asegúrate de que el archivo de tu base de datos está en el mismo directorio o proporciona la ruta correcta.")
-    st.stop() # Detiene la ejecución si no se encuentra el archivo
+    st.error("No se encontró el archivo 'base.csv'.")
+    st.stop()
 
-# Título del dashboard
 st.title('Prerregistro EGEL septiembre 2025')
-
-# Instrucciones para el usuario
 st.write('Para confirmar si quedaste prerregistrado/a para el EGEL de septiembre 2025, escribe en el siguiente recuadro tu matrícula.')
-
-# Etiqueta para el campo de entrada de matrícula
 st.write('Matrícula (8 dígitos)')
 
-# Campo de entrada para la matrícula
-matricula_input = st.text_input('')
+matricula_input = st.text_input('').strip()  # Limpia espacios del input
 
-# Verifica si se ha ingresado una matrícula
 if matricula_input:
-    # Filtra la base de datos para encontrar la matrícula ingresada
-    resultado = df[df['Matricula'] == matricula_input] # Reemplaza 'Matricula' con el nombre real de la columna de matrículas en tu base de datos
+    resultado = df[df['Matricula'] == matricula_input]
 
-    # Muestra el resultado
     if not resultado.empty:
-        nombre = resultado.iloc[0]['Nombre'] # Reemplaza 'Nombre' con el nombre real de la columna de nombres en tu base de datos
+        nombre = resultado.iloc[0]['Nombre']
         st.write(f'{nombre}')
         st.write('Has realizado con éxito.')
     else:
